@@ -1,6 +1,9 @@
 import usersController from './controller/usersController.mjs';
 import { USERS } from './const.mjs';
 import { getErrorCode } from './utils/getErrorCode.mjs';
+import { URL } from 'node:url';
+import { parse as parseQueryParams } from 'node:querystring';
+import getParams from './utils/getParams.mjs';
 
 class Router {
   _setJSONHeader() {
@@ -25,11 +28,14 @@ class Router {
     this.req = req;
     this.res = res;
 
+    const params = getParams(req.url, req.headers.host);
+    // console.log(params);
+
     try {
       this._setJSONHeader();
 
-      switch (req.url) {
-        case USERS:
+      switch (true) {
+        case USERS.test(req.url):
           await usersController.init(req, res);
           break;
         default:

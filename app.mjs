@@ -1,5 +1,8 @@
 import http from 'node:http';
 import router from './router.mjs';
+import peerService from './service/peerService.mjs';
+import countPeerDirs from './utils/countPeerDirs.mjs';
+import fillPeers from './utils/fillPeers.mjs';
 
 // try {
 //   const filePath = new URL('./wireguard/peer1/peer1.conf', import.meta.url);
@@ -9,30 +12,23 @@ import router from './router.mjs';
 //   console.error(err.message);
 // }
 
-// const countPeerDirs = async () => {
-//   let count = 0;
-//   const files = await readdir('./wireguard');
+try {
+  const dbPeers = await peerService.getPeers();
+  const dbPeersLength = JSON.parse(dbPeers)?.length;
 
-//   for (const file of files) {
-//     if (file.includes('peer')) {
-//       count++;
-//     }
-//   }
+  if (dbPeersLength && dbPeersLength === 0) {
+    console.log('Setting up peers');
+    const peersCount = await countPeerDirs();
 
-//   return count;
-// }
+    if (peersCount) {
+      await fillPeers(peersCount);
+    }
 
-// const fillPeers = async () => {
-//   const peersCount = await countPeerDirs();
-
-//   const inserts = Array.from({ length: peersCount }, (_, i) => {
-//     return sql`INSERT INTO peers (peer_id, is_allowed) VALUES (${i + 1}, true)`;
-//   });
-
-//   await Promise.all(inserts);
-// }
-
-// await fillPeers();
+    console.error('No peer dirs found');
+  }
+} catch (err) {
+  console.error(err.message);
+}
 
 
 const server = http.createServer(async (req, res) => {

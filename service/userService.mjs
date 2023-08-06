@@ -12,6 +12,12 @@ class UserService {
 
     return JSON.stringify(newUser);
   }
+
+  async updateUserSubscription(id, days) {
+    const updatedUser = await sql`UPDATE users SET subscription = ${days} WHERE id = ${id}`;
+
+    return JSON.stringify(updatedUser);
+  }
 }
 
 export default new UserService();

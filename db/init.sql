@@ -10,6 +10,6 @@ CREATE TABLE peers (
 CREATE TABLE users (
     id INT NOT NULL PRIMARY KEY,
     username TEXT,
-    peer_id INT UNIQUE REFERENCES peers(peer_id)
-    -- FOREIGN KEY (peer_id) REFERENCES peers(peer_id)
+    peer_id INT UNIQUE REFERENCES peers(peer_id),
+    subscribe_days INT
 );

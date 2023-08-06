@@ -8,7 +8,7 @@ const getBody = async (req) => {
 
     req.on('end', () => {
       try {
-        resolve(JSON.parse(body));
+        resolve(body);
       } catch (error) {
         reject(error);
       }
