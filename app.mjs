@@ -16,15 +16,17 @@ try {
   const dbPeers = await peerService.getPeers();
   const dbPeersLength = JSON.parse(dbPeers)?.length;
 
-  if (dbPeersLength && dbPeersLength === 0) {
+  if (dbPeersLength === 0) {
     console.log('Setting up peers');
     const peersCount = await countPeerDirs();
 
     if (peersCount) {
       await fillPeers(peersCount);
+      console.log('Peers filled');
+    } else {
+      console.error('No peer dirs found');
     }
 
-    console.error('No peer dirs found');
   }
 } catch (err) {
   console.error(err.message);

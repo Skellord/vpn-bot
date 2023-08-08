@@ -1,4 +1,5 @@
 import { GET, POST, PUT } from '../const.mjs';
+import transactionService from '../service/transactionService.mjs';
 import usersService from '../service/userService.mjs';
 import getBody from '../utils/getBody.mjs';
 import { Controller } from './controller.mjs';
@@ -21,19 +22,24 @@ class UsersController extends Controller {
         }
 
         if (!this.body.id || !this.body.username) {
+
           throw new Error('Bad Request, no id or username');
         }
 
-        const newUser = await usersService.createUser(body.id, body.username);
+        const newUser = await usersService.createUser(this.body.id, this.body.username);
         res.end(newUser);
         break;
       case PUT:
-        const params = getParams(req.url, req.headers.host);
-
         if (!this.params.id) {
           throw new Error('Bad Request, no id');
         }
-        // console.log(params);
+
+        if (!this.body || !this.body.days) {
+          throw new Error('Bad Request, no body');
+        }
+
+        const userTransaction = await transactionService.createTransaction(this.params.id, this.body.days);
+        res.end(userTransaction);
         break;
       default:
         throw new Error('Bad Request, not GET or POST');

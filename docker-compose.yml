@@ -12,28 +12,28 @@ services:
       - POSTGRES_DB=postgres
     # volumes:
     #   - .:/docker-entrypoint-initdb.d
-  # wireguard:
-  #   image: lscr.io/linuxserver/wireguard
-  #   container_name: wireguard
-  #   restart: always
-  #   cap_add:
-  #     - NET_ADMIN
-  #     - SYS_MODULE
-  #   sysctls:
-  #     - net.ipv4.conf.all.src_valid_mark=1
-  #   ports:
-  #     - 51820:51820/udp
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     # - TZ=Europe/London
-  #     - TZ=Asia/Yekaterinburg
-  #     - SERVERURL=auto #optional
-  #     - SERVERPORT=51820 #optional
-  #     - PEERS=4 #optional
-  #     - PEERDNS=auto #optional
-  #     - INTERNAL_SUBNET=10.13.13.0 #optional
-  #     - ALLOWEDIPS=0.0.0.0/0 #optional
-  #   volumes:
-  #     - ./wireguard:/config
-  #     - /lib/modules:/lib/modules
+  wireguard:
+    image: lscr.io/linuxserver/wireguard
+    container_name: wireguard
+    restart: always
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    ports:
+      - 51820:51820/udp
+    environment:
+      - PUID=1000
+      - PGID=1000
+      # - TZ=Europe/London
+      - TZ=Asia/Yekaterinburg
+      - SERVERURL=auto #optional
+      - SERVERPORT=51820 #optional
+      - PEERS=4 #optional
+      - PEERDNS=auto #optional
+      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+    volumes:
+      - ./wireguard:/config
+      - /lib/modules:/lib/modules
