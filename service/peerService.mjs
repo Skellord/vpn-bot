@@ -6,6 +6,12 @@ class PeerService {
 
     return JSON.stringify(peers);
   }
+
+  async checkFreePeer() {
+    const [freePeer] = await sql`SELECT * FROM peers WHERE is_allowed = true LIMIT 1`;
+
+    return freePeer;
+  }
 }
 
 export default new PeerService();

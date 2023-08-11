@@ -1,5 +1,7 @@
 import { GET, POST, PUT } from '../const.mjs';
+import peerService from '../service/peerService.mjs';
 import transactionService from '../service/transactionService.mjs';
+import userService from '../service/userService.mjs';
 import usersService from '../service/userService.mjs';
 import getBody from '../utils/getBody.mjs';
 import { Controller } from './controller.mjs';
@@ -39,6 +41,19 @@ class UsersController extends Controller {
         }
 
         const userTransaction = await transactionService.createTransaction(this.params.id, this.body.days);
+        const isUserHasPeer = await userService.checkUserPeer(this.params.id);
+
+        if (!isUserHasPeer) {
+          const freePeer = await peerService.checkFreePeer();
+          // console.log(peerId);
+
+          if (freePeer) {
+            await userService.setUserPeer(this.params.id, freePeer.peer_id);
+          } else {
+            throw new Error('Bad Request, no free peer');
+          }
+        }
+
         res.end(userTransaction);
         break;
       default:

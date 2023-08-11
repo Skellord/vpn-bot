@@ -8,6 +8,7 @@ class TransactionService {
 
   async createTransaction(userId, amount) {
     const transaction = await sql`INSERT INTO subscribe_transactions (user_id, days_amount) VALUES (${userId}, ${amount}) RETURNING *`;
+
     return JSON.stringify(transaction);
   }
 }
