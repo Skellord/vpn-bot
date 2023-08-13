@@ -1,23 +1,19 @@
-const getBody = async (req) => {
-  return new Promise((resolve, reject) => {
-    let body = '';
+export const getBody = async (req) => {
+  let body = '';
 
-    req.on('data', (chunk) => {
-      body += chunk;
-    });
+  req.on('data', (chunk) => {
+    body += chunk;
+  });
 
+  await new Promise((resolve, reject) => {
     req.on('end', () => {
-      try {
-        resolve(body);
-      } catch (error) {
-        reject(error);
-      }
+      resolve();
     });
 
     req.on('error', (error) => {
       reject(error);
     });
   });
-}
 
-export default getBody;
+  return body;
+}

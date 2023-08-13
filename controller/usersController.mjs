@@ -3,15 +3,12 @@ import peerService from '../service/peerService.mjs';
 import transactionService from '../service/transactionService.mjs';
 import userService from '../service/userService.mjs';
 import usersService from '../service/userService.mjs';
-import getBody from '../utils/getBody.mjs';
 import { Controller } from './controller.mjs';
 
 class UsersController extends Controller {
   async init(req, res) {
     await this.setBody(req);
     this.setParams(req);
-
-    console.log(this.body);
 
     switch (req.method) {
       case GET:
@@ -45,7 +42,6 @@ class UsersController extends Controller {
 
         if (!isUserHasPeer) {
           const freePeer = await peerService.checkFreePeer();
-          // console.log(peerId);
 
           if (freePeer) {
             await userService.setUserPeer(this.params.id, freePeer.peer_id);
@@ -57,7 +53,7 @@ class UsersController extends Controller {
         res.end(userTransaction);
         break;
       default:
-        throw new Error('Bad Request, not GET or POST');
+        throw new Error('Bad Request, not GET or POST or PUT');
     }
   }
 }
