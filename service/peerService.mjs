@@ -1,27 +1,58 @@
 import sql from '../database.mjs';
-import { readFile } from 'node:fs/promises';
-import { Buffer } from 'node:buffer';
+import { readFile, readdir } from 'node:fs/promises';
 
-class PeerService {
-  async getPeers() {
-    const peers = await sql`SELECT * FROM peers`;
+async function getPeers() {
+  try {
+    const [peers] = await sql`SELECT * FROM peers`;
 
-    return JSON.stringify(peers);
+    return peers;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+
+async function countPeerDirs() {
+  let count = 0;
+  const dirPath = new URL('../wireguard', import.meta.url);
+  const files = await readdir(dirPath);
+
+  for (const file of files) {
+    if (file.includes('peer')) {
+      count++;
+    }
   }
 
-  async checkFreePeer() {
-    const [freePeer] = await sql`SELECT * FROM peers WHERE is_allowed = true LIMIT 1`;
+  return count;
+};
 
-    return freePeer;
-  }
+async function fillPeers(peersCount) {
+  const inserts = Array.from({ length: peersCount }, (_, i) => {
+    return sql`INSERT INTO peers (peer_id, is_allowed) VALUES (${i + 1}, true)`;
+  });
 
-  async getPeerImg(id, res) {
-    const filePath = new URL(`../wireguard/peer${id}/peer${id}.png`, import.meta.url);
-    const data = await readFile(filePath);
+  await Promise.all(inserts);
+}
 
-    res.setHeader('Content-Type', 'image/png');
-    return res.end(data);
+export async function updatePeers() {
+  const dbPeers = await getPeers();
+  const dbPeersLength = dbPeers?.length;
+
+  if (dbPeersLength === 0) {
+    console.log('Setting up peers');
+    const peersCount = await countPeerDirs();
+
+    if (peersCount) {
+      await fillPeers(peersCount);
+      console.log('Peers filled');
+    } else {
+      console.error('No peer dirs found');
+    }
   }
 }
 
-export default new PeerService();
+export async function checkFreePeer() {
+  const [freePeer] = await sql`SELECT * FROM peers WHERE is_allowed = true LIMIT 1`;
+
+  return freePeer;
+}

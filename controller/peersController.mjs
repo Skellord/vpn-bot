@@ -1,33 +1,23 @@
-import { GET, POST, PUT } from '../const.mjs';
-import peerService from '../service/peerService.mjs';
-import userService from '../service/userService.mjs';
-import { Controller } from './controller.mjs';
-import { Buffer } from 'node:buffer';
+import { readFile } from 'node:fs/promises';
 
-class PeersController extends Controller {
-  async init(req, res) {
-    await this.setBody(req);
-    this.setParams(req);
+import { getUser } from '../service/userService.mjs';
 
-    switch (req.method) {
-      case GET:
-        if (this.params.type === 'image' && this.params.userId) {
-          const user = await userService.getUser(this.params.userId);
+export async function getPeerImage(req, res) {
+  const { userId } = req.body;
 
-          if (user.peer_id) {
-            await peerService.getPeerImg(user.peer_id, res);
-            // const image = Buffer.from(imageBuffer, 'utf-8').toString('base64');
-            // res.setHeader('Content-Type', 'image/png');
-            // res.end(image);
-          }
-        }
-        break;
+  try {
+    const user = await getUser(userId);
+    const id = user.peer_id;
 
-      default:
-        throw new Error('Bad Request');
-        break;
+    if (id) {
+      const filePath = new URL(`../wireguard/peer${id}/peer${id}.png`, import.meta.url);
+      const data = await readFile(filePath);
+      res.setHeader('Content-Type', 'image/png');
+      res.end(data);
     }
+  } catch (err) {
+    console.error(err);
+    res.statusCode = 500;
+    res.end(err.message);
   }
-}
-
-export default new PeersController;
+};
