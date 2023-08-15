@@ -1,0 +1,5 @@
+node_modules
+wireguard
+db
+.editorconfig
+.gitignore

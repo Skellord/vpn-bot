@@ -1,7 +1,7 @@
 import sql from '../database.mjs';
 import { updateUserPeer } from '../service/userService.mjs';
 
-export async function createTransaction(req, res) {
+export async function handleCreateTransaction(req, res) {
   const { userId, amount } = req.body;
 
   try {

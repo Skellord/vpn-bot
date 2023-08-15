@@ -1,6 +1,6 @@
 import sql from '../database.mjs';
 
-export async function getUsers(_, res) {
+export async function handleGetUsers(_, res) {
   try {
     const users = await sql`SELECT * FROM users`;
 
@@ -12,19 +12,7 @@ export async function getUsers(_, res) {
   }
 };
 
-export async function getUser(req, res) {
-  try {
-    const { id } = req.params;
-    const [user] = await sql`SELECT * FROM users WHERE id = ${id}`;
-    res.end(JSON.stringify(user));
-  } catch (err) {
-    console.error(err);
-    res.statusCode = 500;
-    res.end(err.message);
-  }
-};
-
-export async function createUser(req, res) {
+export async function handleCreateUser(req, res) {
   const { id, username } = req.body;
 
   try {

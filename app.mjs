@@ -4,8 +4,9 @@ import { URL } from 'node:url';
 import { router } from './router.mjs';
 import { updatePeers } from './service/peerService.mjs';
 import { getBody } from './utils/getBody.mjs';
+import { PORT, HOST } from './const.mjs';
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = `${HOST}:${PORT}`;
 
 try {
   await updatePeers();
@@ -29,6 +30,6 @@ const server = http.createServer(async (req, res) => {
 });
 
 
-server.listen(5000, () => {
-  console.log('Server listened 5000');
+server.listen(PORT, () => {
+  console.log(`Server listened ${BASE_URL}`);
 })

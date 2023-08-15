@@ -3,19 +3,19 @@ services:
   postgres:
     build: ./db
     container_name: database
-    restart: always
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=qwerty2580456
       - POSTGRES_DB=postgres
-    # volumes:
-    #   - .:/docker-entrypoint-initdb.d
+    volumes:
+      - .:/docker-entrypoint-initdb.d
   wireguard:
     image: lscr.io/linuxserver/wireguard
     container_name: wireguard
-    restart: always
+    restart: on-failure
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -37,3 +37,16 @@ services:
     volumes:
       - ./wireguard:/config
       - /lib/modules:/lib/modules
+  app:
+    build: .
+    container_name: server
+    restart: on-failure
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=8080
+      - PGPORT=5432
+      - PGUSER=admin
+      - PGPASSWORD=qwerty2580456
+      - PGDATABASE=postgres
+
