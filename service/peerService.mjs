@@ -3,7 +3,7 @@ import { readFile, readdir } from 'node:fs/promises';
 
 async function getPeers() {
   try {
-    const [peers] = await sql`SELECT * FROM peers`;
+    const peers = await sql`SELECT * FROM peers`;
 
     return peers;
   } catch (err) {

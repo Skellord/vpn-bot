@@ -1,19 +1,22 @@
 import postgres from 'postgres';
-import { HOST } from './const.mjs';
 
-const port = process.env.DB_PORT ?? 5432;
-const database = process.env.PGDATABASE ?? 'postgres';
-const user = process.env.PGUSER ?? 'admin';
-const password = process.env.PGPASSWORD ?? 'qwerty2580456';
+const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID, PGPORT, NODE_ENV } = process.env;
+
+const port = PGPORT ? Number(PGPORT) : 5432;
+const url = `postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?options=project%3D${ENDPOINT_ID}`;
+
+const ssl = NODE_ENV === 'production';
 
 const dbConfig = {
-  host: HOST,
+  host: 'localhost',
   port,
-  database,
-  user,
-  password,
+  database: 'postgres',
+  user: 'admin',
+  password: 'qwerty2580456',
 };
 
-const sql = postgres(dbConfig);
+const connection = NODE_ENV === 'production' ? url : dbConfig;
+
+const sql = postgres(connection, ssl);
 
 export default sql;
