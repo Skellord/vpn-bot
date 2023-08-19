@@ -14,9 +14,8 @@ const dbConfig = {
   user: 'admin',
   password: 'qwerty2580456',
 };
-
 const connection = NODE_ENV === 'production' ? url : dbConfig;
 
-const sql = postgres(connection, ssl);
+const sql = postgres(connection, NODE_ENV === 'production' ? { ssl } : undefined);
 
 export default sql;

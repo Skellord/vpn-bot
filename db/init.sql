@@ -1,13 +1,16 @@
-CREATE TABLE IF NOT EXISTS peers (
-  id SERIAL PRIMARY KEY,
-  peer_id INT UNIQUE,
-  is_allowed BOOLEAN
-);
+DROP TABLE peers;
+DROP TABLE users;
+DROP TABLE subscribe_transactions;
+
+-- CREATE TABLE IF NOT EXISTS peers (
+--   id SERIAL PRIMARY KEY,
+--   peer_id INT UNIQUE,
+--   is_allowed BOOLEAN
+-- );
 
 CREATE TABLE IF NOT EXISTS users (
   id INT NOT NULL PRIMARY KEY,
   username TEXT,
-  peer_id INT UNIQUE REFERENCES peers(peer_id),
   subscribe_days INT NOT NULL DEFAULT 0
 );
 

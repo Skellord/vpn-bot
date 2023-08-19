@@ -1,7 +1,7 @@
 {
   "name": "vpn-bot-server",
   "version": "0.0.1",
-  "description": "A bot for vpn",
+  "description": "A server for vpn bot",
   "private": true,
   "engines": {
     "node": ">=18.0.0"
@@ -18,6 +18,9 @@
   },
   "license": "ISC",
   "dependencies": {
+    "docker-compose": "^0.24.2",
+    "dotenv": "^16.3.1",
+    "node-schedule": "^2.1.1",
     "postgres": "^3.3.5"
   },
   "devDependencies": {

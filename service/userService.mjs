@@ -3,10 +3,14 @@ import { checkFreePeer } from './peerService.mjs';
 
 
 export async function updateUserSubscription(id, days) {
-  const newSubscription = await sql`UPDATE users SET subscription = ${days} WHERE id = ${id} RETURNING *`;
-  const user = await this.checkUserPeer(id);
+  try {
+    const newSubscription = await sql`UPDATE users SET subscribe_days = ${days} WHERE id = ${id} RETURNING *`;
 
-  return JSON.stringify(newSubscription);
+    return JSON.stringify(newSubscription);
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
 
 export async function setUserPeer(id, peerId) {
@@ -47,4 +51,22 @@ export async function getUser(id) {
     console.error(err);
     return null;
   }
-}
+};
+
+export async function updateUsersSubscribementDays() {
+  try {
+    const users = await sql`SELECT * FROM users`;
+
+    for await (const user of users) {
+      const [subscriptionDays] = await sql`SELECT subscribe_days FROM users WHERE id = ${user.id}`;
+      const subscriptionDaysNumber = Number(subscriptionDays);
+
+      if (!isNaN(subscriptionDaysNumber)) {
+        const newDays = subscriptionDaysNumber === 0 ? 0 : subscriptionDaysNumber - 1;
+        await updateUserSubscription(user.id, newDays);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};

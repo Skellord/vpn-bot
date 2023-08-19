@@ -2,3 +2,4 @@ node_modules
 wireguard
 .editorconfig
 .gitignore
+wireguard-variables.env

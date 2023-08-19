@@ -1,15 +1,16 @@
 import http from 'node:http';
 import { URL } from 'node:url';
+import 'dotenv/config';
 
 import { router } from './router.mjs';
-import { updatePeers } from './service/peerService.mjs';
 import { getBody } from './utils/getBody.mjs';
 import { PORT, HOST } from './const.mjs';
+import { deleteWireguardPeer } from './service/wireguardService.mjs';
 
 const BASE_URL = `${HOST}:${PORT}`;
 
 try {
-  await updatePeers();
+  await deleteWireguardPeer('test5');
 } catch (err) {
   console.error(err);
 }

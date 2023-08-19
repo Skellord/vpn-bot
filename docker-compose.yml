@@ -12,41 +12,45 @@ services:
       - POSTGRES_DB=postgres
     volumes:
       - ./db:/docker-entrypoint-initdb.d
-  wireguard:
-    image: lscr.io/linuxserver/wireguard
-    container_name: wireguard
-    restart: on-failure
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
-    ports:
-      - 51820:51820/udp
-    environment:
-      - PUID=1000
-      - PGID=1000
-      # - TZ=Europe/London
-      - TZ=Asia/Yekaterinburg
-      - SERVERURL=auto #optional
-      - SERVERPORT=51820 #optional
-      - PEERS=4 #optional
-      - PEERDNS=auto #optional
-      - INTERNAL_SUBNET=10.13.13.0 #optional
-      - ALLOWEDIPS=0.0.0.0/0 #optional
-    volumes:
-      - ./wireguard:/config
-      - /lib/modules:/lib/modules
-  # web:
-  #   build: .
-  #   container_name: server
+  # wireguard:
+  #   env_file:
+  #     - wireguard-variables.env
+  #   image: lscr.io/linuxserver/wireguard
+  #   container_name: wireguard
   #   restart: on-failure
+  #   cap_add:
+  #     - NET_ADMIN
+  #     - SYS_MODULE
+  #   sysctls:
+  #     - net.ipv4.conf.all.src_valid_mark=1
   #   ports:
-  #     - 8080:8080
+  #     - 51820:51820/udp
   #   environment:
-  #     - PORT=8080
-  #     - PGHOST=ep-restless-dust-38933286.eu-central-1.aws.neon.tech
-  #     - ENDPOINT_ID=ep-restless-dust-38933286
-  #     - NODE_ENV=production
+  #     - PUID=1000
+  #     - PGID=1000
+  #     # - TZ=Europe/London
+  #     - TZ=Asia/Yekaterinburg
+  #     - SERVERURL=auto
+  #     - SERVERPORT=51820
+  #     # - PEERS="${USERS}"
+  #     - PEERDNS=auto
+  #     - INTERNAL_SUBNET=10.13.13.0
+  #     - ALLOWEDIPS=0.0.0.0/0
+  #     - PERSISTENTKEEPALIVE_PEERS=all
+  #     - LOG_CONFS=false
   #   volumes:
-  #     - ./wireguard:/app/wireguard
+  #     - ./wireguard:/config
+  #     - /lib/modules:/lib/modules
+  web:
+    build: .
+    container_name: server
+    restart: on-failure
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=8080
+      - PGHOST=ep-restless-dust-38933286.eu-central-1.aws.neon.tech
+      - ENDPOINT_ID=ep-restless-dust-38933286
+      - NODE_ENV=production
+    volumes:
+      - ./wireguard:/app/wireguard
