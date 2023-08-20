@@ -1,46 +1,17 @@
 version: '3.9'
 services:
-  postgres:
-    build: ./db
-    container_name: database
-    restart: on-failure
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=qwerty2580456
-      - POSTGRES_DB=postgres
-    volumes:
-      - ./db:/docker-entrypoint-initdb.d
-  # wireguard:
-  #   env_file:
-  #     - wireguard-variables.env
-  #   image: lscr.io/linuxserver/wireguard
-  #   container_name: wireguard
+  # postgres:
+  #   build: ./db
+  #   container_name: database
   #   restart: on-failure
-  #   cap_add:
-  #     - NET_ADMIN
-  #     - SYS_MODULE
-  #   sysctls:
-  #     - net.ipv4.conf.all.src_valid_mark=1
   #   ports:
-  #     - 51820:51820/udp
+  #     - "5432:5432"
   #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     # - TZ=Europe/London
-  #     - TZ=Asia/Yekaterinburg
-  #     - SERVERURL=auto
-  #     - SERVERPORT=51820
-  #     # - PEERS="${USERS}"
-  #     - PEERDNS=auto
-  #     - INTERNAL_SUBNET=10.13.13.0
-  #     - ALLOWEDIPS=0.0.0.0/0
-  #     - PERSISTENTKEEPALIVE_PEERS=all
-  #     - LOG_CONFS=false
+  #     - POSTGRES_USER=admin
+  #     - POSTGRES_PASSWORD=qwerty2580456
+  #     - POSTGRES_DB=postgres
   #   volumes:
-  #     - ./wireguard:/config
-  #     - /lib/modules:/lib/modules
+  #     - ./db:/docker-entrypoint-initdb.d
   web:
     build: .
     container_name: server

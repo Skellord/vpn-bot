@@ -4,8 +4,8 @@ import { dirname, resolve, join } from 'path';
 import { fileURLToPath } from 'url';
 
 import { getArrayFromEnvVariables, getCurrentTime } from '../utils/index.mjs';
+import { WIREGUARD } from '../const.mjs';
 
-const WIREGUARD = 'wireguard';
 const UTF_8 = 'utf-8';
 
 const currentFilePath = fileURLToPath(import.meta.url);
@@ -46,13 +46,23 @@ async function reserveCopy() {
   }
 };
 
+export async function getAddedPeers() {
+  try {
+    const data = await readFile(filePath, { signal, encoding: UTF_8 });
+    const addedNames = getArrayFromEnvVariables(data);
+
+    return addedNames;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export async function addWireguardPeer(name) {
   try {
     await reserveCopy();
 
     console.log('Adding peer...');
-    const data = await readFile(filePath, { signal, encoding: UTF_8 });
-    const addedNames = getArrayFromEnvVariables(data);
+    const addedNames = await getAddedPeers();
 
     if (addedNames.includes(name)) {
       console.log('Peer name already exists');
@@ -75,8 +85,7 @@ export async function deleteWireguardPeer(name) {
     await reserveCopy();
 
     console.log('Deleting peer...');
-    const data = await readFile(filePath, { signal, encoding: UTF_8 });
-    const addedNames = getArrayFromEnvVariables(data);
+    const addedNames = await getAddedPeers();
 
     if (!addedNames.includes(name)) {
       console.log('Peer name not found');

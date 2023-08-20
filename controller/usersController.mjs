@@ -16,7 +16,7 @@ export async function handleCreateUser(req, res) {
   const { id, username } = req.body;
 
   try {
-    const newUser = await sql`INSERT INTO users (id, username) VALUES (${id}, ${username}) RETURNING *`;
+    const [newUser] = await sql`INSERT INTO users (id, username) VALUES (${id}, ${username}) RETURNING *`;
     res.end(JSON.stringify(newUser));
   } catch (err) {
     console.error(err);

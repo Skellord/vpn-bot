@@ -1,20 +1,22 @@
 import http from 'node:http';
 import { URL } from 'node:url';
 import 'dotenv/config';
+import schedule from 'node-schedule';
 
 import { router } from './router.mjs';
-import { getBody } from './utils/getBody.mjs';
+import { getBody } from './utils/index.mjs';
 import { PORT, HOST } from './const.mjs';
-import { deleteWireguardPeer } from './service/wireguardService.mjs';
+import { decrementUsersSubscriptionDays } from './service/userService.mjs';
+import { syncPeers } from './service/peerService.mjs';
 
 const BASE_URL = `${HOST}:${PORT}`;
 
-try {
-  await deleteWireguardPeer('test5');
-} catch (err) {
-  console.error(err);
+async function scheduledJobs() {
+  await decrementUsersSubscriptionDays();
+  setTimeout(syncPeers, 5000);
 }
 
+const syncJobs = schedule.scheduleJob('0/1 * * * *', scheduledJobs);
 
 const server = http.createServer(async (req, res) => {
   let reqUrl = new URL(req.url, BASE_URL);

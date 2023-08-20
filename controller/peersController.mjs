@@ -1,18 +1,15 @@
 import { readFile } from 'node:fs/promises';
-import { createReadStream } from 'node:fs';
-import { pipeline } from 'node:stream/promises';
 
-import { getUser } from '../service/userService.mjs';
+import { getPeerName } from '../utils/index.mjs';
+import { WIREGUARD } from '../const.mjs';
 
 export async function handleGetPeerImage(req, res) {
-  const { userId } = req.body;
-
   try {
-    const user = await getUser(userId);
-    const id = user.peer_id;
+    const { userId } = req.params;
 
-    if (id) {
-      const filePath = new URL(`../wireguard/peer${id}/peer${id}.png`, import.meta.url);
+    if (userId) {
+      const peerName = `peer_${getPeerName(userId)}`;
+      const filePath = new URL(`../${WIREGUARD}/${WIREGUARD}/${peerName}/${peerName}.png`, import.meta.url);
       const data = await readFile(filePath);
       res.setHeader('Content-Type', 'image/png');
       res.end(data);
@@ -21,20 +18,18 @@ export async function handleGetPeerImage(req, res) {
     }
   } catch (err) {
     console.error(err);
-    res.statusCode = 500;
-    res.end(err.message);
+    res.statusCode = 404;
+    res.end('Image not found');
   }
 };
 
 export async function handleGetPeerConf(req, res) {
-  const { userId } = req.body;
-
   try {
-    const user = await getUser(userId);
-    const id = user.peer_id;
+    const { userId } = req.params;
 
-    if (id) {
-      const filePath = new URL(`../wireguard/peer${id}/peer${id}.conf`, import.meta.url);
+    if (userId) {
+      const peerName = `peer_${getPeerName(userId)}`;
+      const filePath = new URL(`../${WIREGUARD}/${WIREGUARD}/${peerName}/${peerName}.conf`, import.meta.url);
       const data = await readFile(filePath);
       res.setHeader('Content-Type', 'octet-stream');
       res.setHeader('Content-Disposition', 'attachment; filename=peer.conf');
@@ -44,7 +39,7 @@ export async function handleGetPeerConf(req, res) {
     }
   } catch (err) {
     console.error(err);
-    res.statusCode = 500;
-    res.end(err.message);
+    res.statusCode = 404;
+    res.end('File not found');
   }
 };
