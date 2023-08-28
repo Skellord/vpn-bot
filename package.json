@@ -1,6 +1,6 @@
 {
   "name": "vpn-bot-server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A server for vpn bot",
   "private": true,
   "engines": {
@@ -9,8 +9,9 @@
   "main": "app.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.mjs",
-    "start": "node app.mjs"
+    "dev": "nodemon src/app.mjs",
+    "start": "pm2 start src/app.mjs --name vpn-bot-server --log ./logs/server.log",
+    "stop": "pm2 stop vpn-bot-server"
   },
   "keywords": [],
   "author": {

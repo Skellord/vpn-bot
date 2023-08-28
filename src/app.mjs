@@ -16,7 +16,7 @@ async function scheduledJobs() {
   setTimeout(syncPeers, 5000);
 }
 
-const syncJobs = schedule.scheduleJob('0/1 * * * *', scheduledJobs);
+const syncJobs = schedule.scheduleJob('0 0 * * *', scheduledJobs);
 
 const server = http.createServer(async (req, res) => {
   let reqUrl = new URL(req.url, BASE_URL);

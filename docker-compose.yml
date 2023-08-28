@@ -1,27 +1,27 @@
 version: '3.9'
 services:
-  # postgres:
-  #   build: ./db
-  #   container_name: database
-  #   restart: on-failure
-  #   ports:
-  #     - "5432:5432"
-  #   environment:
-  #     - POSTGRES_USER=admin
-  #     - POSTGRES_PASSWORD=qwerty2580456
-  #     - POSTGRES_DB=postgres
-  #   volumes:
-  #     - ./db:/docker-entrypoint-initdb.d
-  web:
-    build: .
-    container_name: server
+  postgres:
+    build: ./db
+    container_name: database
     restart: on-failure
     ports:
-      - 8080:8080
+      - "5432:5432"
     environment:
-      - PORT=8080
-      - PGHOST=ep-restless-dust-38933286.eu-central-1.aws.neon.tech
-      - ENDPOINT_ID=ep-restless-dust-38933286
-      - NODE_ENV=production
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=qwerty2580456
+      - POSTGRES_DB=postgres
     volumes:
-      - ./wireguard:/app/wireguard
+      - ./db:/docker-entrypoint-initdb.d
+  # web:
+  #   build: .
+  #   container_name: server
+  #   restart: on-failure
+  #   ports:
+  #     - 8080:8080
+  #   environment:
+  #     - PORT=8080
+  #     - PGHOST=ep-restless-dust-38933286.eu-central-1.aws.neon.tech
+  #     - ENDPOINT_ID=ep-restless-dust-38933286
+  #     - NODE_ENV=production
+  #   volumes:
+  #     - ./wireguard:/app/wireguard

@@ -1,4 +1,4 @@
-import { handleCreateUser, handleGetUsers } from './controller/usersController.mjs';
+import { handleCreateUser, handleGetUser } from './controller/usersController.mjs';
 import { handleCreateTransaction } from './controller/transactionsController.mjs';
 import { handleGetPeerConf, handleGetPeerImage } from './controller/peersController.mjs';
 import { GET, PEERS, POST, TRANSACTIONS, USERS } from './const.mjs';
@@ -9,7 +9,7 @@ function noResponse(_, res) {
 }
 
 export const router = {
-  [`${GET}${USERS}`]: handleGetUsers,
+  [`${GET}${USERS}`]: handleGetUser,
   [`${POST}${USERS}`]: handleCreateUser,
   [`${POST}${TRANSACTIONS}`]: handleCreateTransaction,
   [`${GET}${PEERS}/image`]: handleGetPeerImage,

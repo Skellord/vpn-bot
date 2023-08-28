@@ -13,11 +13,23 @@ export async function handleGetUsers(_, res) {
 };
 
 export async function handleCreateUser(req, res) {
-  const { id, username } = req.body;
-
   try {
+    const { id, username } = req.body;
+    console.log(id, username);
     const [newUser] = await sql`INSERT INTO users (id, username) VALUES (${id}, ${username}) RETURNING *`;
     res.end(JSON.stringify(newUser));
+  } catch (err) {
+    console.error(err);
+    res.statusCode = 500;
+    res.end(err.message);
+  }
+};
+
+export async function handleGetUser(req, res) {
+  try {
+    const { id } = req.params;
+    const [user] = await sql`SELECT * FROM users WHERE id = ${id}`;
+    res.end(JSON.stringify(user));
   } catch (err) {
     console.error(err);
     res.statusCode = 500;
